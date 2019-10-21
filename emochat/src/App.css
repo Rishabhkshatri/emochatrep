@@ -1,0 +1,169 @@
+* {
+  box-sizing: border-box;
+}
+
+.normTable{
+	margin: auto;
+} 
+
+.loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.center {
+  padding: 70px 0;
+  text-align: center;
+}
+
+.textCenter{
+  text-align : center;
+}
+
+td:nth-child(2n+1){
+  padding: 5px 10px 5px 0;
+}
+
+td:nth-child(2n){
+  padding: 5px 0 5px 10px;
+}
+
+input{
+  border: 1px solid;
+  padding: 5px;
+}
+
+.tdBtn{
+  float: right;
+}
+
+.pageContent {
+  margin: 0;
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.chatHead{
+    position: sticky;
+    top: 0;
+    background: lightgray;
+    width: 100%;
+    height: 32px;
+}
+
+.backBtn{
+  float: left;
+  width: 20%;
+}
+
+.chatH3{
+  float: left;
+  width: 80%;
+  margin: 0;
+  padding: 5px;
+  text-align: center;
+}
+
+.chatListDiv{
+  margin: 0;
+  position: absolute;
+  width: 30%;
+  height: 100%;
+  border: 1px solid;
+  overflow-y: auto;
+}
+
+.chatListUl{
+  height: 100%;
+  padding-inline-start: 0;
+  margin-block-start: 0;
+  margin-block-end: 0;
+}
+
+.chatListH3{
+  padding-left: 20px;
+  margin: 10px 0 0 0;
+  border-bottom: 1px solid grey;
+}
+
+.chatList{
+	list-style-type: none;
+	padding: 5px 20px;
+  border-bottom: 1px solid grey;
+  cursor: pointer;
+}
+
+.msgDiv{
+  margin: 0;
+  position: sticky;
+  bottom: 0;
+  overflow-y: auto;
+  width: 100%;
+  background: lightgrey;
+}
+
+.rightList{
+  text-align: justify;
+  text-align-last: right;
+}
+
+.msgInputDiv{
+  width: 80%;
+  float: left;
+}
+
+.msgInput{
+  width: -webkit-fill-available;
+}
+
+.msgBtnDiv{
+  width: 20%;
+  float: left;
+}
+
+.msgBtn{
+  float: right;
+}
+
+.videoDiv{
+  margin: 0;
+  position: absolute;
+  left: 30%;
+  width: 70%;
+  height: 100%;
+  overflow-y: auto;
+  top: 0;
+}
+
+.videoInputDiv{
+  position: sticky;
+  top: 0;
+  width: 100%;
+  float: left;
+  z-index: 1;
+  background-color: lightgray
+}
+
+.videoInput{
+  width: 100%;
+}
+
+.videoShowDiv{
+  position: absolute;
+  top: 34px;
+  width: 100%;
+}
+
+.videoSpan{
+  display: inherit;
+}
+
+.videoCont{
+  border: 1px solid;
+  width: 36%;
+  margin: 0 auto 10px auto; 
+}
