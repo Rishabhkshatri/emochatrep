@@ -1,4 +1,5 @@
 import React from 'react';
+import serverCall from './ServerCall';
 class Registration extends React.Component{
 	constructor(props) {
 		super(props);
@@ -36,7 +37,16 @@ class Registration extends React.Component{
 				method : 'POST',
 				body : this.state
 			};
-			this.props.serverCall(req_data);
+			serverCall(req_data).then(res=>{
+				if(res.api_err === ""){
+				    this.props.stateChange({
+				    	page_name : res.page_name,
+				    	data : res.data
+				    });
+				}else{
+					document.getElementById('err_msg').innerText = res.api_err;
+				};
+			})
 		}
 	}
 

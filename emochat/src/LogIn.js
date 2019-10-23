@@ -1,4 +1,5 @@
 import React from 'react';
+import serverCall from './ServerCall';
 
 class LogIn extends React.Component{
 	constructor(props) {
@@ -8,7 +9,8 @@ class LogIn extends React.Component{
 		this.onChange = this.onChange.bind(this);
 		this.state = {
 			email : '',
-			password : ''
+			password : '',
+			err_msg : ''
 		}
 	}
 
@@ -26,7 +28,18 @@ class LogIn extends React.Component{
 			method : 'POST',
 			body : this.state
 		}
-		this.props.serverCall(req_data);
+		serverCall(req_data).then(res=>{
+			if(res.api_err === ""){
+			    this.props.stateChange({
+			    	page_name : res.page_name,
+			    	data : res.data
+			    });
+			}else{
+				this.setState({
+					err_msg : res.api_err
+				})
+			}
+		});
 	}
 
 	registerPageEvent() {
@@ -52,6 +65,9 @@ function LogInContent(props) {
 					<tr>
 						<td><label> Password </label></td>
 						<td><input type="password" id="password" value={props.elem_val.password} onChange={props.onChange} /></td>
+					</tr>
+					<tr>
+						<td><span id="err_msg">{props.elem_val.err_msg}</span></td>
 					</tr>
 					<tr>
 						<td><button onClick={props.logInEvent}> LogIn </button></td>

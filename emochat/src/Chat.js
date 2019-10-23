@@ -1,6 +1,6 @@
 import React from 'react';
 import serverCall from './ServerCall';
-import {socket} from './config';
+import {socket, link} from './config';
 import emojisList from 'emojis-list';
 var emoji_ind = {"analytical":1569,"joy":1639,"sadness":1664,"anger":1661};
 
@@ -194,18 +194,45 @@ function ChatDetail(props) {
 }
 
 class VideoFeed extends React.Component{
-	constructor(props) {
+	constructor(props) { console.log(props);
 		super(props);
+		this.getProfile = this.getProfile.bind(this);
+		this.videoList = this.videoList.bind(this);
 		this.onChange = this.onChange.bind(this);
 		this.uploadEvent = this.uploadEvent.bind(this);
+		this.showVideoEvent = this.showVideoEvent.bind(this);
 		this.state = {
-			video_list : []
+			video_list : [],
+			show_video : 0
 		}
 		this.cur_user = this.props.data.cur_user;
 		this.fileInput = React.createRef();
 	}
 
 	UNSAFE_componentWillMount(){
+		this.getProfile();
+		this.videoList();
+		socket.on('newVideo',(active_user)=>{
+			this.videoList();
+		});
+
+	}
+	
+	getProfile(){
+		let req_data = {
+			route : '/GetProfile',
+			method : 'POST'
+		}
+
+		serverCall(req_data).then(res=>{
+			this.setState({
+				show_video : res.show_video_all,
+			});
+		});
+
+	}
+
+	videoList(){
 		let req_data = {
 			route : '/GetFileList',
 			method : 'POST'
@@ -213,11 +240,11 @@ class VideoFeed extends React.Component{
 
 		serverCall(req_data).then(res=>{
 			this.setState({
-				video_list : res.data.video_list
+				video_list : res.data.video_list,
 			});
 		});
 	}
-	
+
 	onChange(event){
 		let obj = {};
 		let id = event.target.id;
@@ -243,21 +270,41 @@ class VideoFeed extends React.Component{
 				let video_list = this.state.video_list;
 				video_list.push(res.video_data)
 				this.setState({
-					video_list : video_list
+					video_list : video_list,
 				});
 			}
 		});
 
 	}
+
+	showVideoEvent(event){
+		let data = {"show_video" : event.target.checked};
+		let req_data = {
+			route : '/ProfileSettings',
+			method : 'POST',
+			body : data
+		}
+		serverCall(req_data).then(res=>{
+			if(res.api_err.length === 0){
+				this.setState({
+					show_video : data['show_video']
+				});
+			}else{
+				this.setState({
+					show_video : !data['show_video']
+				});
+			}
+		});
+	}
 	
 	render(){
-		return <AllVideo uploadEvent={this.uploadEvent} fileInput={this.fileInput} video_list={this.state.video_list} />;
+		return <AllVideo uploadEvent={this.uploadEvent} fileInput={this.fileInput} video_list={this.state.video_list} show_video={this.state.show_video} showVideoEvent={this.showVideoEvent} />;
 	}
 }
 
 function AllVideo(props) {
 	let videos = "";
-
+	console.log(props);
 	if(props.video_list.length === 0){
 		videos = "No Video";
 	}else{
@@ -266,7 +313,7 @@ function AllVideo(props) {
 					<div className="videoCont" key={video_obj.video_id}>
 						<span className="videoSpan">{video_obj.user_u_name}</span>
 						<video width="320" height="240" controls>
-					  		<source src={'http://localhost:4000/GetFile/'+video_obj.video_name} type="video/mp4" />
+					  		<source src={link+'/GetFile/'+video_obj.video_name} type="video/mp4" />
 					  		Your browser does not support the video tag.
 						</video>
 					</div>
@@ -276,6 +323,10 @@ function AllVideo(props) {
 	return (<div className="videoDiv">
 				<div className="videoInputDiv">
 					<input className="videoInput" type="file" ref={props.fileInput} onChange={props.uploadEvent} accept="video/*" />
+					<label className="container">Show Videos
+						<input type="checkbox" title="Show your videos to others" checked={props.show_video} onChange={props.showVideoEvent} />
+					  	<span className="checkmark"></span>
+					</label>
 				</div>
 				<div className="videoShowDiv">
 					{videos}

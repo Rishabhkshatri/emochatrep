@@ -21,7 +21,7 @@ exports.logInCheck = (req,res)=>{
 		is_valid = false;
 	}
 	if(is_valid){
-		let sql_user = `SELECT user_id,user_u_name FROM temo_user WHERE user_email='${req_data['email']}' AND user_password='${req_data['password']}'`;
+		let sql_user = `SELECT user_id,user_u_name,show_video_all FROM temo_user WHERE user_email='${req_data['email']}' AND user_password='${req_data['password']}'`;
 		con.query(sql_user,(err,sql_res,fields)=>{
 			if(err){
 				res_obj = {api_err : "Server Error",page_name : "LogIn"};
@@ -41,6 +41,10 @@ exports.logInCheck = (req,res)=>{
 						res.json(res_obj);
 						res.end();
 					});
+				}else{
+					res_obj = {api_err : "Incorrect email and password",page_name : "LogIn"};
+					res.json(res_obj);
+					res.end();
 				}
 			}
 		});

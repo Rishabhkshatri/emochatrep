@@ -23,4 +23,10 @@ exports.routes = (app)=>{
 
 	const apiGetFile = require('./api/apiGetFile');
 	app.get('/GetFile/emovideo\*',apiGetFile.getFile);
+
+	const apiProfileSettings = require('./api/apiProfileSettings');
+	app.post('/ProfileSettings',apiProfileSettings.profileSettings);
+
+	const apiGetProfile = require('./api/apiProfileSettings');
+	app.post('/GetProfile',apiGetProfile.getProfile);
 }

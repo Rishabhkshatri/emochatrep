@@ -3,7 +3,7 @@ con = mysql.createConnection({
     host : 'localhost',
     user : 'root',
     password : '111',
-    database : 'emochat'//'mydb'
+    database : 'emochat1'//'mydb'
   });
 
 con.connect((err)=>{

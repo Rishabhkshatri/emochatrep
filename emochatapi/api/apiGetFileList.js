@@ -7,8 +7,8 @@ exports.getFileList = (req,res)=>{
 	}
 
 	if(is_valid){
-		// let sql_user = `SELECT A.*,B.user_u_name FROM temo_video AS A, temo_user AS B WHERE A.user_id = B.user_id AND B.show_video_all = 1`;
-		let sql_user = `SELECT A.* FROM temo_video AS A`;
+		let sql_user = `SELECT A.*,B.user_u_name FROM temo_video AS A, temo_user AS B WHERE A.user_id = B.user_id AND (B.show_video_all = 1 OR B.user_id = ${req_data['ser_user_id']})`;
+		// let sql_user = `SELECT A.* FROM temo_video AS A`;
 		con.query(sql_user,(err,sql_res,fields)=>{
 			if(err){
 				res_obj = {api_err : "Server Error",page_name : "LogIn"};

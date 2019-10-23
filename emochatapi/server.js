@@ -56,8 +56,9 @@ app.use((req,res,next)=>{
   if(req.cookies.jwt !== undefined){
     jwt.verify(req.cookies.jwt,SECRET_KEY,{audience:"jwt_"+process.env.TS},(err,user_obj)=>{
       if(err){
-        if(req.originalUrl === "/" || req.originalUrl === "/Registration")
+        if(req.originalUrl === "/" || req.originalUrl === "/Registration"){
           next();
+        }
         else{
           res_obj = {api_err : "",page_name : "LogIn"};
           res.json(res_obj);
@@ -71,8 +72,9 @@ app.use((req,res,next)=>{
       }
     });
   }else{
-    if(req.originalUrl === "/")
+    if(req.originalUrl === "/" || req.originalUrl === "/Registration"){
       next();
+    }
     else{
       res_obj = {api_err : "",page_name : "LogIn"};
       res.json(res_obj);
@@ -97,9 +99,13 @@ io.on('connection', function(socket){
   });
 });
 
-  u_socket.SEvents.on("newMsg",(u_id,msg_obj)=>{
-    u_socket.user_socket[u_id].emit('newMsg', msg_obj);
-  });
+u_socket.SEvents.on("newVideo",()=>{
+  io.emit('newVideo');
+});
+
+u_socket.SEvents.on("newMsg",(u_id,msg_obj)=>{
+  u_socket.user_socket[u_id].emit('newMsg', msg_obj);
+});
 
 // add all the routes
 routes.routes(app);

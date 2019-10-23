@@ -1,10 +1,10 @@
 import React from 'react';
+import serverCall from './ServerCall';
 import {link,emochat_comp} from './config';
 
 class App extends React.Component {
   constructor(props){
-    super(props)
-    this.serverCall = this.serverCall.bind(this);
+    super(props);
     this.stateChange = this.stateChange.bind(this);
     this.state = {
                     page_name : '',
@@ -18,33 +18,7 @@ class App extends React.Component {
       route : '/',
       method : 'POST'
     }
-    this.serverCall(req_data);   
-  }
-
-  serverCall(req_data){
-/*    if(req_data.method === undefined){
-      req_data.method = 'GET';
-    }*/
-    if(req_data.body === undefined){
-      req_data.body = {};
-    }
-    let req_con = {
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        }, 
-        redirect: 'follow',
-        credentials: 'include',
-        method : req_data.method,
-        body : JSON.stringify(req_data.body)
-      };
-
-    // console.log(req_con);
-    let req = new Request(link+req_data.route, req_con);
-    fetch(req).then(res=>{
-      // console.log(res);
-      return res.json()
-    }).then(res=>{      
+    serverCall(req_data).then(res=>{      
       if(res.page_name !== undefined || res.page_name !== "")
         this.stateChange(
           {
@@ -52,7 +26,7 @@ class App extends React.Component {
             data : res.data
           }
         );
-    });
+    });   
   }
 
   stateChange(state_obj){
@@ -64,7 +38,7 @@ class App extends React.Component {
     let content = <div className="center">{this.state.loading_text}</div>;
     if(this.state.page_name !== ''){
       let PageName = emochat_comp[this.state.page_name];
-      content = <PageName data={this.state.data} serverCall={this.serverCall} stateChange={this.stateChange} />
+      content = <PageName data={this.state.data} stateChange={this.stateChange} />
     }
     
     return (
